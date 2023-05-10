@@ -16,16 +16,22 @@ class EventService
         $this->eventRepository = $eventRepository;
     }
 
+    /**
+     * @param string $name
+     * @param bool $isAuthorised
+     * @param string $ipAddress
+     * @return void
+     */
     public function save(string $name, bool $isAuthorised, string $ipAddress): void
     {
         $event = new Event();
 
         $event->setName($name);
-        $event->setIsAuthorised($isAuthorised);
+        $event->setIsAuthorized($isAuthorised);
         $event->setIpAddress($ipAddress);
         $event->setCreatedAt(new DateTimeImmutable());
 
-        $this->eventRepository->save($event);
+        $this->eventRepository->save($event, true);
     }
 
     /**
@@ -34,8 +40,6 @@ class EventService
      */
     public function getAll(string $groupBy = null): array
     {
-        $events = [];
-
         if (isset($groupBy) && $this->isCorrectGroupByFilter($groupBy)) {
             $events = $this->eventRepository->findAllAndGroupBy($groupBy);
         } else {
@@ -48,12 +52,10 @@ class EventService
     /**
      * @param string $name
      * @param string|null $groupBy
-     * @return mixed
+     * @return array
      */
-    public function getAllByName(string $name, string $groupBy = null): mixed
+    public function getAllByName(string $name, string $groupBy = null): array
     {
-        $events = [];
-
         if (isset($groupBy) && $this->isCorrectGroupByFilter($groupBy)) {
             $events = $this->eventRepository->findAllByNameAndGroupBy($name, $groupBy);
         } else {
@@ -66,12 +68,10 @@ class EventService
     /**
      * @param string $creationDate
      * @param string|null $groupBy
-     * @return mixed
+     * @return array
      */
-    public function getAllByDate(string $creationDate, string $groupBy = null): mixed
+    public function getAllByDate(string $creationDate, string $groupBy = null): array
     {
-        $events = [];
-
         if (isset($groupBy) && $this->isCorrectGroupByFilter($groupBy)) {
             $events = $this->eventRepository->findAllByDateAndGroupBy($creationDate, $groupBy);
         } else {
@@ -85,12 +85,10 @@ class EventService
      * @param string $creationDate
      * @param string $eventName
      * @param string|null $groupBy
-     * @return mixed
+     * @return array
      */
-    public function getAllByDateAndName(string $creationDate, string $eventName, string $groupBy = null): mixed
+    public function getAllByDateAndName(string $creationDate, string $eventName, string $groupBy = null): array
     {
-        $events = [];
-
         if (isset($groupBy) && $this->isCorrectGroupByFilter($groupBy)) {
             $events = $this->eventRepository->findAllByNameAndDateAndGroupBy($eventName, $creationDate, $groupBy);
         } else {
@@ -106,6 +104,6 @@ class EventService
      */
     private function isCorrectGroupByFilter(string $groupBy): bool
     {
-        return in_array($groupBy, GroupBy::cases());
+        return in_array($groupBy, array_column(GroupBy::cases(), 'value'));
     }
 }

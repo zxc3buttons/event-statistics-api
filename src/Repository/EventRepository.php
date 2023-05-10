@@ -46,6 +46,7 @@ class EventRepository extends ServiceEntityRepository
     public function findAllAndGroupBy(string $groupBy): array
     {
         return $this->createQueryBuilder('e')
+            ->select('e.'.$groupBy.' as ' . $groupBy, 'count(e) as count')
             ->groupBy('e.' . $groupBy)
             ->getQuery()
             ->getResult();
@@ -72,6 +73,7 @@ class EventRepository extends ServiceEntityRepository
     public function findAllByNameAndGroupBy(string $name, string $groupBy): array
     {
         return $this->createQueryBuilder('e')
+            ->select('e.'.$groupBy.' as ' . $groupBy, 'count(e) as count')
             ->andWhere('e.name = :name')
             ->setParameter('name', $name)
             ->groupBy('e.' . $groupBy)
@@ -86,8 +88,8 @@ class EventRepository extends ServiceEntityRepository
     public function findAllByDate(string $creationDate): array
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.created_at = :created_at')
-            ->setParameter('created_at', $creationDate)
+            ->andWhere('e.createdAt = :createdAt')
+            ->setParameter('createdAt', $creationDate)
             ->getQuery()
             ->getResult();
     }
@@ -100,8 +102,9 @@ class EventRepository extends ServiceEntityRepository
     public function findAllByDateAndGroupBy(string $creationDate, string $groupBy): array
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.created_at = :created_at')
-            ->setParameter('created_at', $creationDate)
+            ->select('e.'.$groupBy.' as ' . $groupBy, 'count(e) as count')
+            ->andWhere('e.createdAt = :createdAt')
+            ->setParameter('createdAt', $creationDate)
             ->groupBy('e.' . $groupBy)
             ->getQuery()
             ->getResult();
@@ -115,8 +118,8 @@ class EventRepository extends ServiceEntityRepository
     public function findAllByNameAndDate(string $name, string $creationDate): array
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.created_at = :created_at')
-            ->setParameter('created_at', $creationDate)
+            ->andWhere('e.createdAt = :createdAt')
+            ->setParameter('createdAt', $creationDate)
             ->andWhere('e.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
@@ -132,8 +135,9 @@ class EventRepository extends ServiceEntityRepository
     public function findAllByNameAndDateAndGroupBy(string $name, string $creationDate, string $groupBy): array
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.created_at = :created_at')
-            ->setParameter('created_at', $creationDate)
+            ->select('e.'.$groupBy.' as ' . $groupBy, 'count(e) as count')
+            ->andWhere('e.createdAt = :createdAt')
+            ->setParameter('createdAt', $creationDate)
             ->andWhere('e.name = :name')
             ->setParameter('name', $name)
             ->groupBy('e.' . $groupBy)

@@ -3,27 +3,29 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
-class Event
+class Event implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $name;
 
     #[ORM\Column]
-    private ?bool $isAuthorised = null;
+    private ?bool $isAuthorized;
 
     #[ORM\Column(length: 255)]
-    private ?string $ipAddress = null;
+    private ?string $ipAddress;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt;
 
     public function getId(): ?int
     {
@@ -42,14 +44,14 @@ class Event
         return $this;
     }
 
-    public function isAuthorised(): ?bool
+    public function isAuthorized(): ?bool
     {
-        return $this->isAuthorised;
+        return $this->isAuthorized;
     }
 
-    public function setIsAuthorised(bool $isAuthorised): self
+    public function setIsAuthorized(bool $isAuthorised): self
     {
-        $this->isAuthorised = $isAuthorised;
+        $this->isAuthorized = $isAuthorised;
 
         return $this;
     }
@@ -66,15 +68,26 @@ class Event
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'isAuthorized' => $this->isAuthorized,
+            'ipAddress' => $this->ipAddress,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+        ];
     }
 }

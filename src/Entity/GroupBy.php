@@ -9,6 +9,6 @@ enum GroupBy: string
 {
 
     case NAME = 'name';
-    case IS_AUTHORISED = 'is_authorised';
-    case IP_ADDRESS = 'ip_address';
+    case IS_AUTHORIZED = 'isAuthorized';
+    case IP_ADDRESS = 'ipAddress';
 }
